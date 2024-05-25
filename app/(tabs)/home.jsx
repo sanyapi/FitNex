@@ -1,33 +1,59 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { images } from '../../constants';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
-  const workouts = [
-    { id: '1', title: 'Shoulders', exercises: '5 Exercises', image: images.thumbnail },
-    { id: '2', title: 'Lower Legs', exercises: '6 Exercises', image: images.thumbnail },
-    { id: '3', title: 'Cardio', exercises: '5 Exercises', image: images.thumbnail },
-    { id: '4', title: 'Upper Body', exercises: '6 Exercises', image: images.thumbnail },
-    { id: '5', title: 'Abs', exercises: '7 Exercises', image: images.thumbnail },
-  ];
+  const [workouts, setWorkouts] = useState([]);
+  const [trainingOfTheDay, setTrainingOfTheDay] = useState(null);
+  const navigation = useNavigation();
 
-  const [trainingOfTheDay, setTrainingOfTheDay] = useState(workouts[1]);
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      try {
+        const response = await axios.get('https://exercisedb.p.rapidapi.com/exercises/bodyPartList', {
+          headers: {
+            'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
+            'X-RapidAPI-Key': 'ae9a37384bmsh944c7afa7311accp1841ebjsn63a6306e0b29',
+          },
+        });
+        const workoutData = response.data.map((workout, index) => ({
+          id: index.toString(),
+          title: workout,
+          exercises: `${Math.floor(Math.random() * 10) + 5} Exercises`, // Random number for exercises
+          image: 'https://via.placeholder.com/150', // Placeholder for the actual image URL
+        }));
+        setWorkouts(workoutData);
+        setTrainingOfTheDay(workoutData[1]);
+      } catch (error) {
+        console.error('Error fetching workouts:', error);
+      }
+    };
 
-  const renderWorkoutItem = ({ item }) => (
-    <TouchableOpacity style={styles.workoutItem}>
-      <Image source={item.image} style={styles.workoutImage} />
-      <View style={styles.workoutTextContainer}>
-        <Text style={styles.workoutTitle}>{item.title}</Text>
-        <View style={styles.workoutExercisesContainer}>
-          <FontAwesome5 name="running" size={12} color="#212020" style={styles.runningIcon} />
-          <Text style={styles.workoutExercises}>{item.exercises}</Text>
+    fetchWorkouts();
+  }, []);
+
+  const renderWorkoutItem = ({ item }) => {
+    const handlePress = () => {
+      navigation.navigate('workout', { bodyPart: item.title });
+    };
+
+    return (
+      <TouchableOpacity style={styles.workoutItem} onPress={handlePress}>
+        <Image source={{ uri: item.image }} style={styles.workoutImage} />
+        <View style={styles.workoutTextContainer}>
+          <Text style={styles.workoutTitle}>{item.title}</Text>
+          <View style={styles.workoutExercisesContainer}>
+            <FontAwesome5 name="running" size={12} color="#212020" style={styles.runningIcon} />
+            <Text style={styles.workoutExercises}>{item.exercises}</Text>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -36,16 +62,18 @@ const Home = () => {
         <Feather name="search" size={24} color="white" />
       </View>
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.trainingContainer}>
-          <Image source={trainingOfTheDay.image} style={styles.trainingImage} />
-          <View style={styles.trainingOverlay}>
-            <Text style={styles.trainingText}>Training Of The Day</Text>
+        {trainingOfTheDay && (
+          <View style={styles.trainingContainer}>
+            <Image source={{ uri: trainingOfTheDay.image }} style={styles.trainingImage} />
+            <View style={styles.trainingOverlay}>
+              <Text style={styles.trainingText}>Training Of The Day</Text>
+            </View>
+            <View style={styles.trainingInfo}>
+              <Text style={styles.trainingTitle}>{trainingOfTheDay.title}</Text>
+              <Text style={styles.trainingExercises}>{trainingOfTheDay.exercises}</Text>
+            </View>
           </View>
-          <View style={styles.trainingInfo}>
-            <Text style={styles.trainingTitle}>{trainingOfTheDay.title}</Text>
-            <Text style={styles.trainingExercises}>{trainingOfTheDay.exercises}</Text>
-          </View>
-        </View>
+        )}
         <View style={styles.introContainer}>
           <Text style={styles.introTitle}>Let's Go Beginner</Text>
           <Text style={styles.introSubtitle}>Target Different Body Parts</Text>
@@ -183,7 +211,6 @@ const styles = StyleSheet.create({
   },
   runningIcon: {
     marginRight: 5,
-
   },
 });
 
