@@ -84,7 +84,7 @@ const TabsLayout = () => {
             />
         </Tabs>
     </>
-  )
+)
 }
 
 export default TabsLayout
