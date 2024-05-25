@@ -1,10 +1,17 @@
 import React from 'react';
-import { View, Text, FlatList, Image } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useNavigation } from '@react-navigation/native';
 
 const Workout = () => {
+  const navigation = useNavigation();
+
+  const handlePlayButtonPress = () => {
+    navigation.navigate('animation'); // Ensure this matches the name used in your navigator
+  };
+
   return (
     <GestureHandlerRootView>
       <SafeAreaView className="bg-primary h-full">
@@ -22,7 +29,7 @@ const Workout = () => {
               <View className="w-full h-[208px] mt-4 mb-10" style={{ backgroundColor: '#F178B6' }}>
                 <View className="flex items-center justify-center h-full">
                   <Image
-                    source={require('./../../assets/images/cardio.png')}
+                    source={require('./../../../assets/images/cardio.png')}
                     style={{ width: 323, height: 157, borderRadius: 20 }}
                   />
                 </View>
@@ -39,10 +46,12 @@ const Workout = () => {
               <View className="flex items-center px-4">
                 <View className="w-full h-[80px] bg-white rounded-[100px] flex flex-row items-center justify-start px-4">
                   {/* Pink Circle */}
-                  <View className="w-12 h-12 bg-[#F178B6] rounded-full flex items-center justify-center">
-                    {/* White Play Button */}
-                    <Icon name="play" size={20} color="white" />
-                  </View>
+                  <TouchableOpacity onPress={handlePlayButtonPress}>
+                    <View className="w-12 h-12 bg-[#F178B6] rounded-full flex items-center justify-center">
+                      {/* White Play Button */}
+                      <Icon name="play" size={20} color="white" />
+                    </View>
+                  </TouchableOpacity>
                   {/* Exercise Title and Description */}
                   <View className="ml-4">
                     <Text className="text-xl font-pmedium text-black mb-1">
@@ -63,6 +72,6 @@ const Workout = () => {
       </SafeAreaView>
     </GestureHandlerRootView>
   );
-}
+};
 
 export default Workout;
