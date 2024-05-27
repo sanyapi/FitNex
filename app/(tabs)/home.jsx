@@ -16,18 +16,15 @@ const Home = () => {
 
   useEffect(() => {
     const fetchWorkouts = async () => {
+      const bodyParts = [
+        'back', 'cardio', 'chest', 'lower arms', 'lower legs', 
+        'neck', 'shoulders', 'upper arms', 'upper legs', 'waist'
+      ];
+
       try {
-        const response = await axios.get('https://exercisedb.p.rapidapi.com/exercises/targetList', {
-          headers: {
-            'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-            'X-RapidAPI-Key': '1bf23a9eccmsh115c69e75f35d65p16a745jsn968f62d43e45',
-          },
-        });
-
-        const targetList = response.data;
-
-        const workoutPromises = targetList.map(async (target, index) => {
-          const response = await axios.get(`https://exercisedb.p.rapidapi.com/exercises/target/${target}`, {
+        const workoutPromises = bodyParts.map(async (bodyPart) => {
+          const response = await axios.get(`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${encodeURIComponent(bodyPart)}`, {
+            params: { limit: '10' },
             headers: {
               'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
               'X-RapidAPI-Key': '1bf23a9eccmsh115c69e75f35d65p16a745jsn968f62d43e45',
@@ -35,8 +32,8 @@ const Home = () => {
           });
 
           const workouts = response.data.map(workout => ({
-            id: `${target}-${workout.id}`,
-            title: workout.target,
+            id: `${bodyPart}-${workout.id}`,
+            title: workout.bodyPart,
             exercises: `${Math.floor(Math.random() * 10) + 5} Exercises`,
             image: workout.gifUrl,
           }));
@@ -118,7 +115,7 @@ const Home = () => {
         {trainingOfTheDay && (
           <View className="bg-[#F178B6] p-8 relative">
             <TouchableOpacity onPress={handleTrainingOfTheDayPress}>
-              <View className="overflow-hidden rounded-2xl">
+              <View className="overflow-hidden rounded-2xl bg-white">
                 <Image source={{ uri: trainingOfTheDay.image }} className="w-full h-52" />
               </View>
               <View className="absolute right-0 bg-[#EF5DA8] rounded-3xl rounded-br-none w-32">
@@ -136,7 +133,7 @@ const Home = () => {
         )}
         <View className="px-8 py-5">
           <Text className="text-xl text-[#EF5DA8] font-pmedium">Let's Go Beginner</Text>
-          <Text className="text-white font-pmedium" >Target Different Body Parts</Text>
+          <Text className="text-white font-pmedium">Target Different Body Parts</Text>
         </View>
         <View className="px-8">
           <FlatList
