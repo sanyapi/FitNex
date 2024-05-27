@@ -55,7 +55,7 @@ const Workout = () => {
                   {/* Exercise Title and Description */}
                   <View className="ml-4">
                     <Text className="text-xl font-pmedium text-black mb-1">
-                      Your Exercise Title
+                      Cardio
                     </Text>
                     <View className="flex flex-row items-center">
                       <Icon className="bg-primary" name="running" size={14} />
@@ -66,6 +66,7 @@ const Workout = () => {
                   </View>
                 </View>
               </View>
+              
             </View>
           )}
         />
