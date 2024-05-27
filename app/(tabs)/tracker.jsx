@@ -3,17 +3,19 @@ import { View, Text, Image, TouchableOpacity, ScrollView, Modal, Button } from '
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
-import { icons } from '../../constants';
+import { icons, images } from '../../constants';
 
 const Tracker = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState('2023-05');
-  const [currentYear, setCurrentYear] = useState(2023);
+  const [selectedMonth, setSelectedMonth] = useState('2024-05');
+  const [currentYear, setCurrentYear] = useState(2024);
+  const [selectedDate, setSelectedDate] = useState(null);
+
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-  const years = Array.from({ length: 10 }, (_, index) => 2023 + index); 
+  const years = Array.from({ length: 10 }, (_, index) => 2024 + index);
 
   const handleMonthYearChange = (month, year) => {
     setSelectedMonth(`${year}-${month < 10 ? `0${month}` : month}`);
@@ -21,46 +23,55 @@ const Tracker = () => {
     setModalVisible(false);
   };
 
+  const handleDayPress = (day) => {
+    setSelectedDate(day.dateString);
+  };
+
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
+        {/* Header */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>Personal Log</Text>
+          <TouchableOpacity onPress={() => { /* Handle Search Button Press */ }}>
+            <Image
+              source={icons.search}
+              resizeMode="contain"
+              style={{ width: 24, height: 24, tintColor: 'white' }}
+            />
+          </TouchableOpacity>
+        </View>
         <ScrollView>
           <View style={{ padding: 16, marginTop: 16 }}>
-            {/* Header */}
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>Personal Log</Text>
-              <TouchableOpacity onPress={() => { /* Handle Search Button Press */ }}>
-                <Image
-                  source={icons.search} 
-                  resizeMode="contain"
-                  style={{ width: 24, height: 24, tintColor: 'white' }} 
-                />
-              </TouchableOpacity>
-            </View>
 
             {/* Profile Information */}
-            <View style={{ backgroundColor: '#EF5DA8', padding: 16, borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ backgroundColor: '#F178B6', padding: 16, borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
               <View>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>Angel Baby</Text>
-                <Text style={{ color: 'white' }}>Age: 21</Text>
-                <View style={{ flexDirection: 'row', marginTop: 4 }}>
-                  <Text style={{ color: 'white' }}>50 kg</Text>
-                  <Text style={{ color: 'white', marginLeft: 10 }}>Weight</Text>
-                </View>
-                <View style={{ flexDirection: 'row', marginTop: 4 }}>
-                  <Text style={{ color: 'white' }}>1.65 CM</Text>
-                  <Text style={{ color: 'white', marginLeft: 10 }}>Height</Text>
+                <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'black' }}>Angel Baby</Text>
+                <Text style={{ color: 'black', fontSize: 16 }}>Age: 21</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+
+                <View style={{ backgroundColor: '#EF5DA8', width: 10, height: 30, borderRadius: 20 }} />
+                  <View style={{ alignItems: 'center', marginRight: 16, marginLeft: 12 }}>
+                    <Text style={{ color: 'black', fontSize: 16, fontWeight:'bold' }}>50 kg</Text>
+                    <Text style={{ color: 'black', fontSize: 12 }}>Weight</Text>
+                  </View>
+                  
+                  <View style={{ backgroundColor: '#EF5DA8', width: 10, height: 30, borderRadius: 20 }} />
+                  <View style={{ alignItems: 'center', marginLeft: 12 }}>
+                    <Text style={{ color: 'black', fontSize: 16, fontWeight:'bold' }}>1.65 cm</Text>
+                    <Text style={{ color: 'black', fontSize: 12 }}>Height</Text>
+                  </View>
                 </View>
               </View>
               <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#fff', overflow: 'hidden' }}>
-                {/* Add your profile image component here */}
-                <Image source={{ uri: 'https://via.placeholder.com/80' }} style={{ width: '100%', height: '100%' }} />
+                <Image source={ images.angelbaby } style={{ width: '100%', height: '100%' }} />
               </View>
             </View>
 
             {/* Workout Log Button */}
             <View style={{ alignItems: 'center', marginTop: 20 }}>
-              <View style={{ backgroundColor: '#EF5DA8', paddingVertical: 8, paddingHorizontal: 32, borderRadius: 20 }}>
+              <View style={{ backgroundColor: '#EF5DA8', paddingVertical: 8, paddingHorizontal: 32, borderRadius: 20, width:'100%', marginTop:10 }}>
                 <Text style={{ color: 'black', textAlign: 'center', fontSize: 16 }}>Workout Log</Text>
               </View>
             </View>
@@ -69,11 +80,11 @@ const Tracker = () => {
             <View style={{ alignItems: 'center', marginVertical: 20 }}>
               <View style={{ width: '100%', height: 1, backgroundColor: 'white', marginBottom: 10 }}></View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16 }}>
-                <Text style={{ color: 'white', fontSize: 16 }}>Choose Date</Text>
+                <Text style={{ color: '#EF5DA8', fontSize: 14, fontWeight:'700' }}>Choose Date</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={{ color: 'white', fontSize: 16 }}>{months[parseInt(selectedMonth.split('-')[1], 10) - 1]} {currentYear}</Text>
+                  <Text style={{ color: 'white', fontSize: 14 }}>{months[parseInt(selectedMonth.split('-')[1], 10) - 1]} {currentYear}</Text>
                   <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginLeft: 10 }}>
-                    <Image source={icons.dropdown} style={{ width: 20, height: 20, tintColor: 'white' }} />
+                    <Image source={icons.dropdown} style={{ width: 18, height: 18, tintColor: 'white' }} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -81,21 +92,27 @@ const Tracker = () => {
             </View>
 
             {/* Calendar Component */}
-            <View style={{ marginBottom: 20 }}>
+            <View style={{justifyContent: 'space-between', marginBottom: 20 }}>
               <Calendar
+              style={{ backgroundColor: '#ffffff', borderRadius: 30, padding: 14}}
                 current={selectedMonth}
-                onDayPress={(day) => {
-                  console.log('selected day', day);
+                markedDates={{
+                  [selectedDate]: {
+                    selected: true,
+                    selectedColor: '#FF69B4',
+                    selectedTextColor: '#ffffff'
+                  }
                 }}
+                onDayPress={handleDayPress}
                 hideArrows
                 hideExtraDays
                 disableMonthChange
                 theme={{
-                  calendarBackground: '#000000',
-                  textSectionTitleColor: '#FFFFFF',
+                  calendarBackground: '#ffffff',
+                  textSectionTitleColor: '#000000',
                   textSectionTitleDisabledColor: '#d9e1e8',
                   selectedDayBackgroundColor: '#FF69B4',
-                  selectedDayTextColor: '#ffffff',
+                  selectedDayTextColor: '#000000',
                   todayTextColor: '#FF69B4',
                   dayTextColor: '#FF69B4',
                   textDisabledColor: '#d9e1e8',
@@ -113,36 +130,7 @@ const Tracker = () => {
                   textDayHeaderFontWeight: '300',
                   textDayFontSize: 16,
                   textMonthFontSize: 16,
-                  textDayHeaderFontSize: 16,
-                  'stylesheet.calendar.header': {
-                    week: {
-                      marginTop: 5,
-                      flexDirection: 'row',
-                      justifyContent: 'space-around',
-                      backgroundColor: 'transparent',
-                      borderRadius: 10,
-                    },
-                    dayHeader: {
-                      marginTop: 2,
-                      marginBottom: 2,
-                      width: 32,
-                      height: 32,
-                      borderRadius: 10,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      color: '#FF69B4',
-                      fontSize: 16,
-                      fontWeight: 'bold',
-                      backgroundColor: '#000000',
-                      borderWidth: 1,
-                      borderColor: '#FF69B4',
-                    },
-                    'stylesheet.calendar.main': {
-                      monthView: {
-                        display: 'none', 
-                      },
-                    },
-                  },
+                  textDayHeaderFontSize: 14,
                 }}
               />
             </View>
@@ -150,29 +138,32 @@ const Tracker = () => {
             {/* Activities Section */}
             <Text style={{ color: '#EF5DA8', fontSize: 27, paddingLeft: 16 }}>Activities</Text>
             <View style={{ alignItems: 'center', marginTop: 10 }}>
-              {/* First log */}
-              <View style={{ backgroundColor: 'white', width: 323, height: 64, borderRadius: 18, marginTop: 15, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
-                <View style={{ backgroundColor: '#EF5DA8', width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
-                  {/* Icon or image can go here */}
-                  <Image source={icons.activity} style={{ width: 24, height: 24 }} />
-                </View>
-                <View style={{ marginLeft: 16 }}>
-                  <Text style={{ color: 'black', fontSize: 16 }}>Cardio</Text>
-                  <Text style={{ color: '#EF5DA8', fontSize: 14 }}>June 09</Text>
-                </View>
-              </View>
+              {selectedDate === '2024-05-09' ? (
+                <>
+                  {/* Cardio log for May 09 */}
+                  <View style={{ backgroundColor: 'white', width: 365, height: 70, borderRadius: 18, marginTop: 15, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: '#EF5DA8', width: 50, height: 50, borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}>
+                      <Image source={icons.activity} style={{ width: 24, height: 24 }} />
+                    </View>
+                    <View style={{ marginLeft: 16 }}>
+                      <Text style={{ color: 'black', fontSize: 16 }}>Cardio</Text>
+                      <Text style={{ color: '#EF5DA8', fontSize: 14 }}>May 09</Text>
+                    </View>
+                  </View>
 
-              {/* Second log */}
-              <View style={{ backgroundColor: 'white', width: 323, height: 64, borderRadius: 18, marginTop: 15, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
-                <View style={{ backgroundColor: '#EF5DA8', width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
-                  {/* Icon or image can go here */}
-                  <Image source={icons.activity} style={{ width: 24, height: 24 }} />
-                </View>
-                <View style={{ marginLeft: 16 }}>
-                  <Text style={{ color: 'black', fontSize: 16 }}>Cardio</Text>
-                  <Text style={{ color: '#EF5DA8', fontSize: 14 }}>June 09</Text>
-                </View>
-              </View>
+                  <View style={{ backgroundColor: 'white', width: 365, height: 70, borderRadius: 18, marginTop: 15, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: '#EF5DA8', width: 50, height: 50, borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}>
+                      <Image source={icons.activity} style={{ width: 24, height: 24 }} />
+                    </View>
+                    <View style={{ marginLeft: 16 }}>
+                      <Text style={{ color: 'black', fontSize: 16 }}>Leg</Text>
+                      <Text style={{ color: '#EF5DA8', fontSize: 14 }}>May 09</Text>
+                    </View>
+                  </View>
+                </>
+              ) : (
+                <Text style={{ color: 'white', fontSize: 16, marginTop: 20 }}>No activities for this day</Text>
+              )}
             </View>
           </View>
 
@@ -209,6 +200,6 @@ const Tracker = () => {
       </SafeAreaView>
     </GestureHandlerRootView>
   );
-}
+};
 
 export default Tracker;
