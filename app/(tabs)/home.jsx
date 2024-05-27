@@ -16,28 +16,36 @@ const Home = () => {
 
   useEffect(() => {
     const fetchWorkouts = async () => {
+      const bodyParts = [
+        'back', 'cardio', 'chest', 'lower arms', 'lower legs',
+        'neck', 'shoulders', 'upper arms', 'upper legs', 'waist'
+      ];
+
       try {
-        const response = await axios.get('https://exercisedb.p.rapidapi.com/exercises', {
-          headers: {
-            'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-            'X-RapidAPI-Key': 'ae9a37384bmsh944c7afa7311accp1841ebjsn63a6306e0b29',
-          },
+        const workoutPromises = bodyParts.map(async (bodyPart) => {
+          const response = await axios.get(`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${encodeURIComponent(bodyPart)}`, {
+            params: { limit: '10' },
+            headers: {
+              'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
+              'X-RapidAPI-Key': 'cfac37b048mshac939b6a4643755p15b081jsn514f524789d6',
+            },
+          });
+
+          const workouts = response.data.map(workout => ({
+            id: `${bodyPart}-${workout.id}`,
+            title: workout.bodyPart,
+            exercises: `${Math.floor(Math.random() * 10) + 5} Exercises`,
+            image: workout.gifUrl,
+          }));
+
+          return workouts[0]; // Assuming we only want the first workout as a representative
         });
-        
-        const workoutData = response.data.map((workout, index) => ({
-          id: index.toString(),
-          title: workout.bodyPart,
-          exercises: `${Math.floor(Math.random() * 10) + 5} Exercises`, // Random number for exercises
-          image: workout.gifUrl,
-        }));
 
-        // Filter the unique body parts and get their corresponding gif
-        const uniqueWorkouts = Array.from(new Set(workoutData.map(a => a.title)))
-          .map(title => workoutData.find(a => a.title === title));
+        const workoutData = await Promise.all(workoutPromises);
 
-        setWorkouts(uniqueWorkouts);
-        setFilteredWorkouts(uniqueWorkouts);
-        setTrainingOfTheDay(uniqueWorkouts[1]);
+        setWorkouts(workoutData);
+        setFilteredWorkouts(workoutData);
+        setTrainingOfTheDay(workoutData[1]);
       } catch (error) {
         console.error('Error fetching workouts:', error);
       }
@@ -48,7 +56,7 @@ const Home = () => {
 
   useEffect(() => {
     if (searchQuery) {
-      const filtered = workouts.filter(workout => 
+      const filtered = workouts.filter(workout =>
         workout.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredWorkouts(filtered);
@@ -83,7 +91,7 @@ const Home = () => {
   return (
     <SafeAreaView className="flex-1 bg-[#1E1E1E]">
       <View className="absolute top-0 w-full bg-[#1E1E1E] z-10 flex-row justify-between items-center p-5">
-        <Text className="text-2xl font-bold text-white">FitNex</Text>
+        <Text className="text-2xl font-pbold text-white ml-2">FitNex</Text>
         {searchVisible ? (
           <Feather name="x" size={24} color="white" onPress={() => {
             setSearchQuery('');
@@ -106,23 +114,26 @@ const Home = () => {
       <ScrollView contentContainerStyle={{ paddingTop: 50 }}>
         {trainingOfTheDay && (
           <View className="bg-[#F178B6] p-8 relative">
-            <TouchableOpacity onPress={handleTrainingOfTheDayPress}>  
-              <View className="overflow-hidden rounded-2xl">
+            <TouchableOpacity onPress={handleTrainingOfTheDayPress}>
+              <View className="overflow-hidden rounded-2xl bg-white">
                 <Image source={{ uri: trainingOfTheDay.image }} className="w-full h-52" />
               </View>
               <View className="absolute right-0 bg-[#EF5DA8] rounded-3xl rounded-br-none w-32">
-                <Text className="text-center text-black text-xs">Training Of The Day</Text>
+                <Text className="text-center text-black text-xs font-pmedium">Training Of The Day</Text>
               </View>
-              <View className="px-2 bg-gray-900 bg-opacity-25 flex-col rounded-bl-2xl rounded-br-2xl mt-[-40]">
-                <Text className="text-[#EF5DA8] text-sm capitalize">{trainingOfTheDay.title}</Text>
-                <Text className="text-white text-xs mb-1">{trainingOfTheDay.exercises}</Text>
+              <View className="px-2 bg-[#3C3C3C] flex-col rounded-bl-2xl rounded-br-2xl mt-[-40]">
+                <Text className="text-[#EF5DA8] font-pmedium text-lg capitalize">{trainingOfTheDay.title}</Text>
+                <View className="flex-row items-center">
+                  <FontAwesome5 name="running" size={12} color="white" className="mr-2" />
+                  <Text className="text-xs text-white ml-2 mb-1">{trainingOfTheDay.exercises}</Text>
+                </View>
               </View>
             </TouchableOpacity>
           </View>
         )}
         <View className="px-8 py-5">
-          <Text className="text-xl text-[#EF5DA8]">Let's Go Beginner</Text>
-          <Text className="text-white">Target Different Body Parts</Text>
+          <Text className="text-xl text-[#EF5DA8] font-pmedium">Let's Go Beginner</Text>
+          <Text className="text-white font-pmedium">Target Different Body Parts</Text>
         </View>
         <View className="px-8">
           <FlatList

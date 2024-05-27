@@ -55,13 +55,28 @@ return (
             <Tabs.Screen
                 name="workout"
                 options={{
-                    title: 'Tracker',
+                    title: 'Workout',
                     headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon
                             icon={icons.workout}
                             color={color}
                             name="Workout"
+                            focused={focused}
+                        />
+                    )
+                }}
+            />
+            <Tabs.Screen
+                name="animation"
+                options={{
+                    title: 'Animation',
+                    headerShown: false,
+                    tabBarIcon: ({ color, focused }) => (
+                        <TabIcon
+                            icon={icons.play}
+                            color={color}
+                            name="Animation"
                             focused={focused}
                         />
                     )
