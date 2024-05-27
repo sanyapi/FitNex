@@ -27,7 +27,7 @@ const Home = () => {
             params: { limit: '10' },
             headers: {
               'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-              'X-RapidAPI-Key': '1bf23a9eccmsh115c69e75f35d65p16a745jsn968f62d43e45',
+              'X-RapidAPI-Key': '41a6616d66mshb32f591453b3eccp113f6ajsnc42be8d94958',
             },
           });
 
@@ -73,7 +73,7 @@ const Home = () => {
     return (
       <TouchableOpacity className="flex-row-reverse items-center mb-4 bg-white rounded-2xl h-24 overflow-hidden" onPress={handlePress}>
         <Image source={{ uri: item.image }} className="w-2/5 h-full rounded-l-none rounded-2xl" />
-        <View className="flex-1 p-2 justify-center">
+        <View className="flex-1 p-6 justify-center">
           <Text className="text-lg font-bold text-black capitalize">{item.title}</Text>
           <View className="flex-row items-center">
             <FontAwesome5 name="running" size={12} color="#212020" className="mr-2" />
@@ -121,11 +121,11 @@ const Home = () => {
               <View className="absolute right-0 bg-[#EF5DA8] rounded-3xl rounded-br-none w-32">
                 <Text className="text-center text-black text-xs font-pmedium">Training Of The Day</Text>
               </View>
-              <View className="px-2 bg-[#3C3C3C] flex-col rounded-bl-2xl rounded-br-2xl mt-[-40]">
-                <Text className="text-[#EF5DA8] font-pmedium text-lg capitalize">{trainingOfTheDay.title}</Text>
+              <View className="px-4 bg-[#3C3C3C] flex-col rounded-bl-2xl rounded-br-2xl mt-[-50]">
+                <Text className="text-[#EF5DA8] font-pmedium text-base capitalize mt-1">{trainingOfTheDay.title}</Text>
                 <View className="flex-row items-center">
                   <FontAwesome5 name="running" size={12} color="white" className="mr-2" />
-                  <Text className="text-xs text-white ml-2 mb-1">{trainingOfTheDay.exercises}</Text>
+                  <Text className="text-xs text-white ml-2 mb-2 mt-[-2]">{trainingOfTheDay.exercises}</Text>
                 </View>
               </View>
             </TouchableOpacity>
