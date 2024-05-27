@@ -29,20 +29,18 @@ const Tracker = () => {
 
   return (
     <GestureHandlerRootView>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#212020' }}>
         {/* Header */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>Personal Log</Text>
-          <TouchableOpacity onPress={() => { /* Handle Search Button Press */ }}>
-            <Image
-              source={icons.search}
-              resizeMode="contain"
-              style={{ width: 24, height: 24, tintColor: 'white' }}
-            />
-          </TouchableOpacity>
+        <View className="flex px-4 space-y-4 mt-6 mb-2">
+          <View className="flex justify-between items-start flex-row mb-0">
+            <Text className="text-2xl font-pbold text-white">
+              Personal Log
+            </Text>
+          </View>
         </View>
+
         <ScrollView>
-          <View style={{ padding: 16, marginTop: 16 }}>
+          <View style={{ padding: 20}}>
 
             {/* Profile Information */}
             <View style={{ backgroundColor: '#F178B6', padding: 16, borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -94,7 +92,7 @@ const Tracker = () => {
             {/* Calendar Component */}
             <View style={{justifyContent: 'space-between', marginBottom: 20 }}>
               <Calendar
-              style={{ backgroundColor: '#ffffff', borderRadius: 30, padding: 14}}
+              style={{ backgroundColor: '#ffffff', borderRadius: 30, paddingBottom: 14}}
                 current={selectedMonth}
                 markedDates={{
                   [selectedDate]: {
@@ -141,7 +139,7 @@ const Tracker = () => {
               {selectedDate === '2024-05-09' ? (
                 <>
                   {/* Cardio log for May 09 */}
-                  <View style={{ backgroundColor: 'white', width: 365, height: 70, borderRadius: 18, marginTop: 15, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
+                  <View className="w-full h-[80px] bg-white rounded-[100px] flex flex-row items-center justify-start px-4">
                     <View style={{ backgroundColor: '#EF5DA8', width: 50, height: 50, borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}>
                       <Image source={icons.activity} style={{ width: 24, height: 24 }} />
                     </View>
@@ -151,7 +149,7 @@ const Tracker = () => {
                     </View>
                   </View>
 
-                  <View style={{ backgroundColor: 'white', width: 365, height: 70, borderRadius: 18, marginTop: 15, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
+                  <View className="w-full h-[80px] bg-white rounded-[100px] flex flex-row items-center justify-start px-4 mt-4">
                     <View style={{ backgroundColor: '#EF5DA8', width: 50, height: 50, borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}>
                       <Image source={icons.activity} style={{ width: 24, height: 24 }} />
                     </View>
