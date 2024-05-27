@@ -9,7 +9,7 @@ const Workout = () => {
   const navigation = useNavigation();
 
   const handlePlayButtonPress = () => {
-    navigation.navigate('animation'); // Ensure this matches the name used in your navigator
+    navigation.navigate('animation');
   };
 
   return (

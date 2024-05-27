@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 const StackLayout = () => {
     return (
         <Stack>
+            {/* This is for the workout screen */}
             <Stack.Screen
               name="index"
               options={{
@@ -10,6 +11,7 @@ const StackLayout = () => {
                 headerShown: false,
               }}
             />
+            {/* This is for the animation screen */}
             <Stack.Screen
               name="animation"
               options={{
