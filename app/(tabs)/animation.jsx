@@ -1,15 +1,39 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { useRouter } from 'expo-router';
+import axios from 'axios';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 const Animation = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const { exerciseName: defaultExerciseName, instructions: defaultInstructions, gifUrl: defaultGifUrl } = route.params || {}; // Destructure params with default values
+
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isGifPlaying, setGifPlaying] = useState(false);
-  const router = useRouter();
+
+  const [exerciseName, setExerciseName] = useState(defaultExerciseName || 'Default Exercise'); // Set default exerciseName
+  const [instructions, setInstructions] = useState(defaultInstructions || 'Default Instructions'); // Set default instructions
+  const [gifUrl, setGifUrl] = useState(defaultGifUrl || 'https://example.com/default.gif'); // Set default gifUrl
+
+  useEffect(() => {
+    const fetchExerciseDetails = async () => {
+      try {
+        // Fetch exercise details based on exerciseName
+        const response = await axios.get(`https://exercisedb.p.rapidapi.com/exercises/${encodeURIComponent(exerciseName)}`);
+        // Update exercise details
+        setInstructions(response.data.instructions);
+        setGifUrl(response.data.gifUrl);
+      } catch (error) {
+        console.error('Error fetching exercise details:', error);
+      }
+    };
+
+    fetchExerciseDetails();
+  }, [exerciseName]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -35,7 +59,7 @@ const Animation = () => {
           ListHeaderComponent={() => (
             <View>
               <View className="flex px-4 space-y-4 mt-6 mb-2">
-                <TouchableOpacity className="flex flex-row items-center" onPress={() => router.back()}>
+                <TouchableOpacity className="flex flex-row items-center" onPress={() => navigation.goBack()}>
                   <Icon name="angle-left" size={24} color="white" />
                   <Text className="text-2xl font-pbold text-white ml-2">
                     Animation
@@ -43,14 +67,14 @@ const Animation = () => {
                 </TouchableOpacity>
               </View>
 
-              {/* Pink Rectangle */}
+              {/* Animated GIF */}
               <View className="w-full h-96 mt-4 bg-[#F178B6] relative">
                 <View className="flex items-center justify-center h-full">
                   <Image
                     source={
                       isGifPlaying
-                        ? require('./../../../assets/images/cardio.gif') // Ensure this path points to your .gif file
-                        : require('./../../../assets/images/cardio.png')
+                        ? { uri: gifUrl }
+                        : require('./../../assets/images/cardio.png')
                     }
                     className="w-[70%] h-[95%] rounded-[16px]"
                   />
@@ -66,7 +90,7 @@ const Animation = () => {
                 </View>
               </View>
 
-              {/* White Rectangle with Rounded Top Corners */}
+              {/* Exercise Details */}
               <View className="flex items-center mt-4">
                 <View
                   className="w-full bg-white flex flex-col px-4 py-4"
@@ -79,8 +103,8 @@ const Animation = () => {
                 >
                   <View className="w-full flex-row items-center justify-between px py">
                     <View className="bg-secondary rounded-[20px] flex-1 mr-2 px-4 py-2">
-                      <Text className="text-xl font-pbold text-white">
-                        Exercise Name Here
+                      <Text className="text-xl font-pbold text-white capitalize">
+                        {exerciseName}
                       </Text>
                     </View>
                     <View className="bg-secondary rounded-[20px] px-2 py-2">
@@ -90,17 +114,12 @@ const Animation = () => {
                     </View>
                   </View>
 
-                  <View className="w-full bg-secondary rounded-[20px] mt-4 flex justify-center px-4 py-2">
-                    <Text className="text-xl font-pbold text-white mb-4">
+                  <View className="w-full bg-secondary rounded-[20px] mt-4 flex justify-center px-4 py-2s">
+                    <Text className="text-xl font-pbold text-white mb-4 whitespace-pre-line">
                       Instructions
                     </Text>
                     <Text className="text-xl font-pmedium text-primary">
-                      {`Stand with your feet shoulder-width apart.\n\n
-Bend your knees and lower your body into a squat position.\n\n
-Jump explosively upwards, extending your legs and arms.\n\n
-While in the air, spread your legs apart and bring your arms out to the sides.\n\n
-Land softly with your feet shoulder-width apart, bending your knees to absorb the impact.\n\n
-Repeat for the desired number of repetitions.`}
+                      {instructions}
                     </Text>
                   </View>
                 </View>

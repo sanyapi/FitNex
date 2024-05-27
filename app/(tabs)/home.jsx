@@ -17,7 +17,7 @@ const Home = () => {
   useEffect(() => {
     const fetchWorkouts = async () => {
       const bodyParts = [
-        'back', 'cardio', 'chest', 'lower arms', 'lower legs', 
+        'back', 'cardio', 'chest', 'lower arms', 'lower legs',
         'neck', 'shoulders', 'upper arms', 'upper legs', 'waist'
       ];
 
@@ -27,7 +27,7 @@ const Home = () => {
             params: { limit: '10' },
             headers: {
               'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-              'X-RapidAPI-Key': '1bf23a9eccmsh115c69e75f35d65p16a745jsn968f62d43e45',
+              'X-RapidAPI-Key': 'cfac37b048mshac939b6a4643755p15b081jsn514f524789d6',
             },
           });
 
