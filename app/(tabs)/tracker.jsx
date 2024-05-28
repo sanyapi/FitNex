@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, ScrollView, Modal, Button } from '
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Calendar } from 'react-native-calendars';
+import { useNavigation } from '@react-navigation/native';
 import { icons, images } from '../../constants';
 
 const Tracker = () => {
@@ -10,6 +11,8 @@ const Tracker = () => {
   const [selectedMonth, setSelectedMonth] = useState('2024-05');
   const [currentYear, setCurrentYear] = useState(2024);
   const [selectedDate, setSelectedDate] = useState(null);
+
+  const navigation = useNavigation();
 
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -27,22 +30,24 @@ const Tracker = () => {
     setSelectedDate(day.dateString);
   };
 
+  const handlePlayButtonPress = () => {
+    navigation.navigate('animation');
+  };
+
   return (
     <GestureHandlerRootView>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#212020' }}>
         {/* Header */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold', color: 'white' }}>Personal Log</Text>
-          <TouchableOpacity onPress={() => { /* Handle Search Button Press */ }}>
-            <Image
-              source={icons.search}
-              resizeMode="contain"
-              style={{ width: 24, height: 24, tintColor: 'white' }}
-            />
-          </TouchableOpacity>
+        <View className="flex px-4 space-y-4 mt-6 mb-2">
+          <View className="flex justify-between items-start flex-row mb-0">
+            <Text className="text-2xl font-pbold text-white">
+              Personal Log
+            </Text>
+          </View>
         </View>
+
         <ScrollView>
-          <View style={{ padding: 16, marginTop: 16 }}>
+          <View style={{ padding: 20 }}>
 
             {/* Profile Information */}
             <View style={{ backgroundColor: '#F178B6', padding: 16, borderRadius: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -51,27 +56,27 @@ const Tracker = () => {
                 <Text style={{ color: 'black', fontSize: 16 }}>Age: 21</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
 
-                <View style={{ backgroundColor: '#EF5DA8', width: 10, height: 30, borderRadius: 20 }} />
+                  <View style={{ backgroundColor: '#EF5DA8', width: 10, height: 30, borderRadius: 20 }} />
                   <View style={{ alignItems: 'center', marginRight: 16, marginLeft: 12 }}>
-                    <Text style={{ color: 'black', fontSize: 16, fontWeight:'bold' }}>50 kg</Text>
+                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>50 kg</Text>
                     <Text style={{ color: 'black', fontSize: 12 }}>Weight</Text>
                   </View>
-                  
+
                   <View style={{ backgroundColor: '#EF5DA8', width: 10, height: 30, borderRadius: 20 }} />
                   <View style={{ alignItems: 'center', marginLeft: 12 }}>
-                    <Text style={{ color: 'black', fontSize: 16, fontWeight:'bold' }}>1.65 cm</Text>
+                    <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>1.65 cm</Text>
                     <Text style={{ color: 'black', fontSize: 12 }}>Height</Text>
                   </View>
                 </View>
               </View>
               <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#fff', overflow: 'hidden' }}>
-                <Image source={ images.angelbaby } style={{ width: '100%', height: '100%' }} />
+                <Image source={images.angelbaby} style={{ width: '100%', height: '100%' }} />
               </View>
             </View>
 
             {/* Workout Log Button */}
             <View style={{ alignItems: 'center', marginTop: 20 }}>
-              <View style={{ backgroundColor: '#EF5DA8', paddingVertical: 8, paddingHorizontal: 32, borderRadius: 20, width:'100%', marginTop:10 }}>
+              <View style={{ backgroundColor: '#EF5DA8', paddingVertical: 8, paddingHorizontal: 32, borderRadius: 20, width: '100%', marginTop: 10 }}>
                 <Text style={{ color: 'black', textAlign: 'center', fontSize: 16 }}>Workout Log</Text>
               </View>
             </View>
@@ -80,7 +85,7 @@ const Tracker = () => {
             <View style={{ alignItems: 'center', marginVertical: 20 }}>
               <View style={{ width: '100%', height: 1, backgroundColor: 'white', marginBottom: 10 }}></View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16 }}>
-                <Text style={{ color: '#EF5DA8', fontSize: 14, fontWeight:'700' }}>Choose Date</Text>
+                <Text style={{ color: '#EF5DA8', fontSize: 14, fontWeight: '700' }}>Choose Date</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text style={{ color: 'white', fontSize: 14 }}>{months[parseInt(selectedMonth.split('-')[1], 10) - 1]} {currentYear}</Text>
                   <TouchableOpacity onPress={() => setModalVisible(true)} style={{ marginLeft: 10 }}>
@@ -92,9 +97,9 @@ const Tracker = () => {
             </View>
 
             {/* Calendar Component */}
-            <View style={{justifyContent: 'space-between', marginBottom: 20 }}>
+            <View style={{ justifyContent: 'space-between', marginBottom: 20 }}>
               <Calendar
-              style={{ backgroundColor: '#ffffff', borderRadius: 30, padding: 14}}
+                style={{ backgroundColor: '#ffffff', borderRadius: 30, paddingBottom: 14 }}
                 current={selectedMonth}
                 markedDates={{
                   [selectedDate]: {
@@ -141,7 +146,10 @@ const Tracker = () => {
               {selectedDate === '2024-05-09' ? (
                 <>
                   {/* Cardio log for May 09 */}
-                  <View style={{ backgroundColor: 'white', width: 365, height: 70, borderRadius: 18, marginTop: 15, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
+                  <TouchableOpacity 
+                    className="w-full h-[80px] bg-white rounded-[100px] flex flex-row items-center justify-start px-4"
+                    onPress={handlePlayButtonPress}
+                  >
                     <View style={{ backgroundColor: '#EF5DA8', width: 50, height: 50, borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}>
                       <Image source={icons.activity} style={{ width: 24, height: 24 }} />
                     </View>
@@ -149,9 +157,11 @@ const Tracker = () => {
                       <Text style={{ color: 'black', fontSize: 16 }}>Cardio</Text>
                       <Text style={{ color: '#EF5DA8', fontSize: 14 }}>May 09</Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
 
-                  <View style={{ backgroundColor: 'white', width: 365, height: 70, borderRadius: 18, marginTop: 15, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
+                  <TouchableOpacity 
+                    className="w-full h-[80px] bg-white rounded-[100px] flex flex-row items-center justify-start px-4 mt-4"
+                  >
                     <View style={{ backgroundColor: '#EF5DA8', width: 50, height: 50, borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}>
                       <Image source={icons.activity} style={{ width: 24, height: 24 }} />
                     </View>
@@ -159,7 +169,7 @@ const Tracker = () => {
                       <Text style={{ color: 'black', fontSize: 16 }}>Leg</Text>
                       <Text style={{ color: '#EF5DA8', fontSize: 14 }}>May 09</Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 </>
               ) : (
                 <Text style={{ color: 'white', fontSize: 16, marginTop: 20 }}>No activities for this day</Text>
