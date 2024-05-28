@@ -161,6 +161,7 @@ const Tracker = () => {
 
                   <TouchableOpacity 
                     className="w-full h-[80px] bg-white rounded-[100px] flex flex-row items-center justify-start px-4 mt-4"
+                    onPress={handlePlayButtonPress}
                   >
                     <View style={{ backgroundColor: '#EF5DA8', width: 50, height: 50, borderRadius: 30, justifyContent: 'center', alignItems: 'center' }}>
                       <Image source={icons.activity} style={{ width: 24, height: 24 }} />
