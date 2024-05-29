@@ -6,28 +6,26 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import axios from 'axios';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Animation = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const { exerciseName: defaultExerciseName, instructions: defaultInstructions, gifUrl: defaultGifUrl } = route.params || {}; // Destructure params with default values
+  const { exerciseName: defaultExerciseName, instructions: defaultInstructions = [], gifUrl: defaultGifUrl } = route.params || {};
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isGifPlaying, setGifPlaying] = useState(false);
 
-  const [exerciseName, setExerciseName] = useState(defaultExerciseName || 'Astride Jump'); // Set default exerciseName
-  const [instructions, setInstructions] = useState(defaultInstructions || '"Stand with your feet shoulder-width apart."'); // Set default instructions
-  const [gifUrl, setGifUrl] = useState(defaultGifUrl || 'https://v2.exercisedb.io/image/kP7PzqOXAIsfeH'); // Set default gifUrl
+  const [exerciseName, setExerciseName] = useState(defaultExerciseName || 'Astride Jump');
+  const [instructions, setInstructions] = useState(defaultInstructions.length ? defaultInstructions : ['Stand with your feet shoulder-width apart.']);
+  const [gifUrl, setGifUrl] = useState(defaultGifUrl || 'https://v2.exercisedb.p.rapidapi.com/image/kP7PzqOXAIsfeH');
 
   useEffect(() => {
     const fetchExerciseDetails = async () => {
       try {
-        // Fetch exercise details based on exerciseName
         const response = await axios.get(`https://exercisedb.p.rapidapi.com/exercises/${encodeURIComponent(exerciseName)}`);
-        // Update exercise details
         const { instructions, gifUrl } = response.data;
-        setInstructions(instructions);
+        setInstructions(instructions.split('. '));
         setGifUrl(gifUrl);
       } catch (error) {
         console.error('Error fetching exercise details:', error);
@@ -63,21 +61,14 @@ const Animation = () => {
               <View className="flex px-4 space-y-4 mt-6 mb-2">
                 <TouchableOpacity className="flex flex-row items-center" onPress={() => navigation.goBack()}>
                   <Icon name="angle-left" size={24} color="white" />
-                  <Text className="text-2xl font-pbold text-white ml-2">
-                    Animation
-                  </Text>
+                  <Text className="text-2xl font-pbold text-white ml-2">Animation</Text>
                 </TouchableOpacity>
               </View>
 
-              {/* Animated GIF */}
               <View className="w-full h-96 mt-4 bg-[#F178B6] relative">
                 <View className="flex items-center justify-center h-full">
                   <Image
-                    source={
-                      isGifPlaying
-                        ? { uri: gifUrl }
-                        : require('./../../assets/images/cardio.png')
-                    }
+                    source={isGifPlaying ? { uri: gifUrl } : require('./../../assets/images/cardio.png')}
                     className="w-[70%] h-[95%] rounded-[16px]"
                   />
                   {!isGifPlaying && (
@@ -92,17 +83,14 @@ const Animation = () => {
                 </View>
               </View>
 
-              {/* Exercise Details */}
               <View className="flex items-center mt-4">
-                <View
-                  className="w-full bg-white flex flex-col px-4 py-4"
-                  style={{
-                    borderTopLeftRadius: 20,
-                    borderTopRightRadius: 20,
-                    borderBottomLeftRadius: 0,
-                    borderBottomRightRadius: 0,
-                  }}
-                >
+                <View className="w-full bg-white flex flex-col px-4 py-4"
+                      style={{
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomLeftRadius: 0,
+                        borderBottomRightRadius: 0,
+                      }}>
                   <View className="w-full flex-row items-center justify-between px py">
                     <View className="bg-secondary rounded-[20px] flex-1 mr-2 px-4 py-2">
                       <Text className="text-xl font-pbold text-white capitalize">
@@ -117,12 +105,16 @@ const Animation = () => {
                   </View>
 
                   <View className="w-full bg-secondary rounded-[20px] mt-4 flex justify-center px-4 py-2s">
-                    <Text className="text-xl font-pbold text-white mb-4 whitespace-pre-line">
+                    <Text className="text-xl font-pbold text-white mb-4 py-3">
                       Instructions
                     </Text>
-                    <Text className="text-xl font-pmedium text-primary">
-                      {instructions}
-                    </Text>
+                    {instructions.map((instruction, index) => (
+                      <View key={index} style={{ marginBottom: 8 }}>
+                        <Text className="text-xl font-pmedium text-primary">
+                          {instruction}
+                        </Text>
+                      </View>
+                    ))}
                   </View>
                 </View>
               </View>
