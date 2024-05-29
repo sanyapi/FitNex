@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import axios from 'axios';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 const Animation = () => {
   const route = useRoute();
@@ -15,9 +16,9 @@ const Animation = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isGifPlaying, setGifPlaying] = useState(false);
 
-  const [exerciseName, setExerciseName] = useState(defaultExerciseName || 'Default Exercise'); // Set default exerciseName
-  const [instructions, setInstructions] = useState(defaultInstructions || 'Default Instructions'); // Set default instructions
-  const [gifUrl, setGifUrl] = useState(defaultGifUrl || 'https://example.com/default.gif'); // Set default gifUrl
+  const [exerciseName, setExerciseName] = useState(defaultExerciseName || 'Astride Jump'); // Set default exerciseName
+  const [instructions, setInstructions] = useState(defaultInstructions || '"Stand with your feet shoulder-width apart."'); // Set default instructions
+  const [gifUrl, setGifUrl] = useState(defaultGifUrl || 'https://v2.exercisedb.io/image/kP7PzqOXAIsfeH'); // Set default gifUrl
 
   useEffect(() => {
     const fetchExerciseDetails = async () => {
@@ -25,8 +26,9 @@ const Animation = () => {
         // Fetch exercise details based on exerciseName
         const response = await axios.get(`https://exercisedb.p.rapidapi.com/exercises/${encodeURIComponent(exerciseName)}`);
         // Update exercise details
-        setInstructions(response.data.instructions);
-        setGifUrl(response.data.gifUrl);
+        const { instructions, gifUrl } = response.data;
+        setInstructions(instructions);
+        setGifUrl(gifUrl);
       } catch (error) {
         console.error('Error fetching exercise details:', error);
       }
@@ -80,11 +82,11 @@ const Animation = () => {
                   />
                   {!isGifPlaying && (
                     <TouchableOpacity
-                      className="absolute bg-[#F178B6] rounded-full p-5 justify-center items-center"
+                      className="absolute bg-[#F178B6] rounded-full p-6 justify-center items-center"
                       style={{ transform: [{ scale: 1.5 }] }}
                       onPress={toggleGif}
                     >
-                      <Icon name="play" size={48} color="white" />
+                      <Icon name="play" size={50} color="white" />
                     </TouchableOpacity>
                   )}
                 </View>

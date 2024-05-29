@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation, useRoute } from '@react-navigation/native'; // Import useNavigation
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 const Workout = () => {
   const [exercises, setExercises] = useState([]);
@@ -12,11 +13,12 @@ const Workout = () => {
   const route = useRoute();
   const defaultBodyPart = 'cardio'; // Default body part
   const { bodyPart } = route.params || { bodyPart: defaultBodyPart }; // Use selected bodyPart if available, otherwise use default
-  const apiKey = 'cfac37b048mshac939b6a4643755p15b081jsn514f524789d6';
+  const apiKey = '03247b73bdmshcb2bdb3c1c41492p1bf5c0jsn3d1110c05e4a';
 
   useEffect(() => {
     const fetchExercises = async () => {
       try {
+        // Fetch exercises based on body part
         const response = await axios.get(`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${encodeURIComponent(bodyPart)}`, {
           headers: {
             'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
@@ -46,6 +48,7 @@ const Workout = () => {
         <FlatList
           ListHeaderComponent={() => (
             <View>
+              {/* Your Workout Heading */}
               <View className="flex px-4 space-y-4 mt-6 mb-2">
                 <View className="flex justify-between items-start flex-row mb-0">
                   <Text className="text-2xl font-pbold text-white">
