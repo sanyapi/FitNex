@@ -1,3 +1,6 @@
+## <a name="about">ℹ️ About</a>
+FitNex is your ultimate fitness companion, designed to empower beginners. Accessible on mobile, FitNex uses a fitness API called ExerciseDB for targeted exercises and detailed instructions, making fitness engaging and accessible for all.
+
 ## <a name="quick-start">🤸 Quick Start</a>
 
 **Prerequisites**
